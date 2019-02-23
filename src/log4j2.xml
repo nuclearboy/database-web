@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
 	<Properties>
-		<Property name="databaselog">/users/44148/logs/database-web/database-web.log</Property>
+		<Property name="databaselog">/users/qduan/logs/database-web/database-web.log</Property>
 	</Properties>
 
 	<Properties>
-		<Property name="table_history">/users/44148/logs/database-web/tables_history.log</Property>
+		<Property name="table_history">/users/qduan/logs/database-web/tables_history.log</Property>
 	</Properties>
 
 	<Appenders>

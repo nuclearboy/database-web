@@ -34,7 +34,7 @@ import com.qduan.util.FileUtil;
 @SessionScoped
 public class DbBean {
 
-	String folder = System.getProperty("user.home") + "/data/dbadmin-tool/history";
+	String dataFolder = System.getProperty("user.home") + "/data/dbadmin-tool/history";
 	Context context;
 
 	Logger logger = LogManager.getLogger("synclogger");
@@ -71,6 +71,11 @@ public class DbBean {
 		if (this.currentUser == null) {
 			this.currentUser = this.getCurrentUser();
 			logger.info("user logged in: " + this.currentUser + " from " + getRemoteIp());
+		}
+		File f = new File(dataFolder);
+		if(!f.exists()) {
+			f.mkdirs();
+			logger.info("history folder will be saved in " + f.getAbsolutePath());
 		}
 	}
 
@@ -124,7 +129,7 @@ public class DbBean {
 			return;
 		}
 
-		new File(this.folder).mkdirs();
+		//new File(this.dataFolder).mkdirs();
 		String filename = this.getTablehistoryFilename();
 
 		File f = new File(filename);
@@ -455,11 +460,11 @@ public class DbBean {
 	}
 
 	protected String getTablehistoryFilename() {
-		return this.folder + "/" + this.tablename + ".txt";
+		return this.dataFolder + "/" + this.tablename + ".txt";
 	}
 
 	protected String getTablesFilename() {
-		return this.folder + "/tablehistory.txt";
+		return this.dataFolder + "/tablehistory.txt";
 	}
 
 	public String getEquery() {
