@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+	<Properties>
+		<Property name="databaselog">/users/44148/logs/database-web/database-web.log</Property>
+	</Properties>
+
+	<Properties>
+		<Property name="table_history">/users/44148/logs/database-web/tables_history.log</Property>
+	</Properties>
+
+	<Appenders>
+		<File name="default" fileName="${databaselog}" bufferedIO="false" immediateFlush="true" filePattern="${MM-dd-yyyy}-${databaselog}">
+			<PatternLayout pattern="%d %p %class{1.} [%t] %m %ex%n" />
+		</File>
+
+		<File name="table_history" fileName="${table_history}" bufferedIO="false" immediateFlush="true">
+			<PatternLayout pattern="%msg%n" />
+		</File>
+
+	</Appenders>
+	<Loggers>
+		<Logger name="table_history" level="INFO"
+			additivity="false">
+			<AppenderRef ref="table_history" />
+		</Logger>
+		<Root level="debug" additivity="false">
+			<AppenderRef ref="default" />
+		</Root>
+	</Loggers>
+</Configuration>

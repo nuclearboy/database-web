@@ -1,0 +1,140 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+
+<link rel="icon" href="icon/db-icon.ico" type="image/x-icon" />
+
+<title>SQL Query Tool -- QD</title>
+
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="js/dbadmin.js"></script>
+<script>
+	$(document).ready(function() {
+
+		//drag td, construct th='td'
+		$('#sql_result_div td').on("dragstart", function(event) {
+			var dt = event.originalEvent.dataTransfer;
+			var th = $(this).closest('table').find('th').eq($(this).index());
+			var thtext = th.text().trim();
+			var tdtext = $(this).text().trim();
+			var content = thtext + "='" + tdtext + "'"; //HEADER='VALUE'
+			dt.setData('Text', content);
+		});
+
+		$('.query').on("drop", function(event) {
+			event.preventDefault();
+			if (event.type === 'drop') {
+				//the cell value
+				var data = event.originalEvent.dataTransfer.getData('Text');
+				insertIntoTextarea(data);
+			}
+			;
+		});
+		
+		  $( ".queryHistory").on("dblclick", function(event) {
+			  alert("you clicked.");
+			  
+		  });
+		});
+	});
+	
+	$(document).ajaxComplete(function() {
+		  $( ".queryHistory").on("dblclick", function(event) {
+			  alert("you clicked.");
+			  
+		  });
+		});
+</script>
+
+
+
+</head>
+<body>
+	<table>
+		<tr>
+			<td><img src="images/db-image.jpg" width="100px" height="50px" />
+			</td>
+			<td>
+				<h1>
+					SQL Query Tool <font size="2"> -- Everyday work made easier</font>
+				</h1>
+			</td>
+		</tr>
+	</table>
+	<p />
+	<hr />
+	<f:view>
+		<h:form>
+			<h:panelGrid columns="2">
+				<h:outputLabel value="Environment"></h:outputLabel>
+
+				<h:selectOneRadio id="evironment" value="#{dbbean.datasource}">
+					<f:selectItem itemValue="UnitDataSource" itemLabel="UNIT" />
+					<f:selectItem itemValue="IntgDataSource" itemLabel="INTG" />
+					<f:selectItem itemValue="PerfDataSource" itemLabel="PERF" />
+					<f:selectItem itemValue="ProdDataSource" itemLabel="PROD" />
+					<f:ajax event="change" execute="@this"
+						render="sql-result time-taken sql-history">
+					</f:ajax>
+				</h:selectOneRadio>
+				<h:outputLabel value="Table"></h:outputLabel>
+				<h:selectOneMenu value="#{dbbean.tablename}"
+					onchange="setBrowseSql(this);" styleClass="tablelist">
+					<f:selectItems value="#{dbbean.tableNames}" />
+					<f:ajax event="change" execute="@this sql-query evironment"
+						render="sql-result sql-history time-taken" />
+				</h:selectOneMenu>
+
+				<h:outputLabel value="Query"></h:outputLabel>
+				<h:panelGrid columns="3" bgcolor="#e7effa">
+					<h:inputTextarea value="#{dbbean.sqlquery}" cols="100" rows="7"
+						styleClass="query" id="sql-query"></h:inputTextarea>
+					<h:outputLabel value="&#x2039;&#x2013;" escape="false"></h:outputLabel>
+					<h:inputTextarea id="sql-history" value="#{dbbean.tablehistory}"
+						cols="100" rows="7" readonly="true" styleClass="queryHistory"
+						onselect="setQuery(this);"></h:inputTextarea>
+				</h:panelGrid>
+
+				<h:outputLabel value=""></h:outputLabel>
+
+				<h:panelGrid columns="6">
+					<h:outputLabel value="Rows"></h:outputLabel>
+					<h:inputText value="#{dbbean.rows}" size="5"
+						onmouseout="this.form.submit();"></h:inputText>
+					<h:selectBooleanCheckbox value="#{dbbean.useOriginalSql}"
+						onchange="this.form.submit();"></h:selectBooleanCheckbox>
+					<h:outputLabel value="Orignal SQL"></h:outputLabel>
+					<h:commandButton value="Save" type="submit"></h:commandButton>
+
+					<h:commandButton action="#{dbbean.search}" type="submit"
+						value="Run Query" styleClass="runquery">
+						<f:ajax execute="sql-query"
+							render="sql-result time-taken sql-history" />
+					</h:commandButton>
+
+					<h:inputHidden value="#{dbbean.tablename}"></h:inputHidden>
+				</h:panelGrid>
+			</h:panelGrid>
+			<h:messages layout="table"></h:messages>
+		</h:form>
+		<hr />
+		<h:panelGrid columns="2" styleClass="sqlresult">
+			<h:outputLabel value="Time(ms)"></h:outputLabel>
+			<h:outputLabel id="time-taken" value="#{dbbean.timeTaken}"></h:outputLabel>
+			<div style="width: 85px"></div>
+			<h:outputText id="sql-result" value="#{dbbean.result}" escape="false"></h:outputText>
+
+
+		</h:panelGrid>
+
+	</f:view>
+</body>
+</html>
