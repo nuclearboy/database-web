@@ -33,11 +33,14 @@ import com.qduan.util.FileUtil;
 @ManagedBean(name = "dbbean")
 @SessionScoped
 public class DbBean {
-
+	
+    //TODO change data folder for all SQLs specific to each table
 	String dataFolder = System.getProperty("user.home") + "/data/dbadmin-tool/history";
 	Context context;
 
+	//TODO modify log4j.xml for logging location (default)
 	Logger logger = LogManager.getLogger("synclogger");
+	//TODO modify log4j2.xml for table history location
 	Logger sql_logger = LogManager.getLogger("table_history");
 
 	private String datasource;
